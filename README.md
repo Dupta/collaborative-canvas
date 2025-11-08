@@ -1,4 +1,4 @@
-# 🎨 Collaborative Canvas
+#  Collaborative Canvas
 
 A **real-time collaborative drawing board** built using **Node.js**, **Express**, **Socket.IO**, and **HTML5 Canvas**.  
 Multiple users can draw together live — every stroke, cursor move, and erase action is synced instantly.
@@ -12,25 +12,25 @@ Multiple users can draw together live — every stroke, cursor move, and erase a
 
 ---
 
-## 🚀 Live Demo
+##  Live Demo
 
 🔗 **[Click here to try it live](https://collaborative-canvas-oqtg.onrender.com)**  
 _(Open in two tabs or devices to see real-time collaboration!)_
 
 ---
 
-## 🧩 Features
+##  Features
 
-- 🖌️ **Drawing Tools** — Brush, eraser, stroke width, and color selection
-- ⚡ **Real-Time Sync** — Instant updates across users using WebSockets
-- ✏️ **Active User Indicators** — See who’s drawing live (name floating near their cursor)
-- 🔄 **Undo / Redo** — Works globally for all users
-- 👥 **User Management** — Shows total users + dropdown with color indicators
-- 📱 **Cross-Device** — Works seamlessly on desktop and mobile browsers
+-  **Drawing Tools** — Brush, eraser, stroke width, and color selection
+-  **Real-Time Sync** — Instant updates across users using WebSockets
+-  **Active User Indicators** — See who’s drawing live (name floating near their cursor)
+-  **Undo / Redo** — Works globally for all users
+-  **User Management** — Shows total users + dropdown with color indicators
+-  **Cross-Device** — Works seamlessly on desktop and mobile browsers
 
 ---
 
-## 🧰 Tech Stack
+##  Tech Stack
 
 | Layer          | Technology                         |
 | -------------- | ---------------------------------- |
@@ -41,7 +41,7 @@ _(Open in two tabs or devices to see real-time collaboration!)_
 
 ---
 
-🧱 Folder Structure
+ Folder Structure
 collaborative-canvas/
 ├── client/
 │ ├── index.html # Frontend UI
@@ -57,7 +57,7 @@ collaborative-canvas/
 ├── README.md # Main documentation
 └── ARCHITECTURE.md # System design explanation
 
-## ⚙️ Setup Instructions
+## Setup Instructions
 
 Clone the repository and install dependencies:
 
@@ -70,7 +70,7 @@ npm start
 ## Then open:
 http://localhost:3000
 
-# 🧪 Testing with Multiple Users
+# Testing with Multiple Users
 
 Run the app locally or open your deployed link.
 
@@ -78,25 +78,25 @@ Open it in **two or more browsers (or devices)**.
 
 Draw on one screen → updates appear **instantly** on all others.
 
-## 🎨 Test Features
+## Test Features
 
-- ✏️ Brush and eraser
-- 🎨 Color and stroke width
-- ↩️ Undo / Redo (global)
-- 👥 Live user list and cursor indicators
+-  Brush and eraser
+-  Color and stroke width
+-  Undo / Redo (global)
+-  Live user list and cursor indicators
 
-✅ Works on **Chrome**, **Firefox**, and **Safari**.
+ Works on **Chrome**, **Firefox**, and **Safari**.
 
 ---
 
-## 🧩 Known Limitations / Bugs
+## Known Limitations / Bugs
 
-- ⏱️ Minor delay (~100–200 ms) depending on network latency.
-- 🔁 Undo/Redo actions apply **globally across users**.
-- 💤 Free Render tier may cause **short startup delay after inactivity**.
-- 🧼 Canvas is **not persistent** (refresh clears drawings).
+-  Minor delay (~100–200 ms) depending on network latency.
+-  Undo/Redo actions apply **globally across users**.
+-  Free Render tier may cause **short startup delay after inactivity**.
+-  Canvas is **not persistent** (refresh clears drawings).
 
-## 🕒 Time Spent
+## Time Spent
 
 | Task | Time |
 |------|------|
@@ -107,13 +107,13 @@ Draw on one screen → updates appear **instantly** on all others.
 | Debugging & deployment (Render) | 3 hours |
 | **Total** | **~17 hours** |
 
-## 💡 Future Improvements
+##  Future Improvements
 
-- 💾 Add persistent canvas saving using **MongoDB** or **Firebase**.
-- 🔐 Implement **authentication** and individual user profiles.
-- 🏠 Support **multiple “rooms”** for separate drawing sessions.
-- 📊 Integrate **latency visualization** (ping/fps monitor).
-- 📱 Improve **mobile touch support** and optimize drawing performance.
+-  Add persistent canvas saving using **MongoDB** or **Firebase**.
+-  Implement **authentication** and individual user profiles.
+-  Support **multiple “rooms”** for separate drawing sessions.
+-  Integrate **latency visualization** (ping/fps monitor).
+-  Improve **mobile touch support** and optimize drawing performance.
 
 ```
 
