@@ -1,7 +1,6 @@
-// client/websocket.js
-// console.log("Connecting to socket server...");
-
-const socket = io();
+const socket = io({
+  transports: ["websocket"],
+});
 const userId = "u_" + Math.random().toString(36).slice(2, 6);
 const userColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
 const room = "main";
@@ -40,11 +39,11 @@ window.sendDrawingStatus = (isDrawing) => {
 };
 
 //UNDO / REDO
-window.sendUndo = function (opId) {
-  socket.emit("op:undo", { userId, opId, room });
+window.sendUndo = function () {
+  socket.emit("op:undo");
 };
-window.sendRedo = function (op) {
-  socket.emit("op:redo", { userId, op, room });
+window.sendRedo = function () {
+  socket.emit("op:redo");
 };
 
 window.sendDrawingStatus = function (isDrawing) {

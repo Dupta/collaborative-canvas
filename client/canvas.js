@@ -18,9 +18,7 @@
   const redoStack = [];
   const appliedOpIds = new Set();
 
-  // ==============================
-  // 🖼️ Canvas Setup
-  // ==============================
+  //setup canvas size
   function fitCanvas() {
     const rect = canvas.getBoundingClientRect();
     canvas.width = Math.floor(rect.width);
@@ -31,9 +29,7 @@
   window.addEventListener("resize", fitCanvas);
   setTimeout(fitCanvas, 100);
 
-  // ==============================
-  // 🧰 Tool Settings
-  // ==============================
+  //initializations and setters
   function setTool(t) {
     tool = t;
   }
@@ -46,9 +42,7 @@
     widthVal = w;
   }
 
-  // ==============================
-  // ✏️ Drawing Logic
-  // ==============================
+  //draw logic how to draw the lines
   function generateId() {
     return "op_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
   }
@@ -119,7 +113,7 @@
     if (window.sendDrawingStatus) window.sendDrawingStatus(false);
 
     operations.push(currentStroke);
-    redoStack.length = 0; // ✅ clear redo when new stroke starts
+    redoStack.length = 0; //clear redo when new stroke starts
 
     if (window.sendStrokeEnd) {
       window.sendStrokeEnd({
@@ -132,9 +126,7 @@
     currentStroke = null;
   }
 
-  // ==============================
-  // 🧠 Drawing Helpers
-  // ==============================
+  //drawing segment logic
   function drawSegment({ from, to, color, width, tool }) {
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
@@ -148,9 +140,20 @@
     }
 
     ctx.lineWidth = width;
+
+    //Interpolate points for smoother curve
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const steps = Math.ceil(distance / 2); // smaller divisor = smoother
+
     ctx.beginPath();
-    ctx.moveTo(from.x, from.y);
-    ctx.lineTo(to.x, to.y);
+    for (let i = 0; i <= steps; i++) {
+      const x = from.x + (dx * i) / steps;
+      const y = from.y + (dy * i) / steps;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
     ctx.stroke();
     ctx.closePath();
   }
@@ -182,9 +185,7 @@
     ctx.globalCompositeOperation = "source-over";
   }
 
-  // ==============================
-  // 🖱️ Mouse / Touch Events
-  // ==============================
+  //mouse click and movement handlers
   function toCanvasCoords(e) {
     const r = canvas.getBoundingClientRect();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -235,47 +236,22 @@
     { passive: false }
   );
 
-  // ==============================
-  // 🔁 Undo / Redo
-  // ==============================
+  //undo and redo logic
   function undoLocal() {
-    if (operations.length === 0) {
-      console.log("UNDO: nothing to undo");
-      return;
+    if (window.sendUndo) {
+      window.sendUndo();
+      console.log("[client] Requested global undo");
     }
-    const op = operations.pop();
-    redoStack.push(op);
-    redrawAll(operations);
-    console.log(
-      "UNDO → operations:",
-      operations.length,
-      "redoStack:",
-      redoStack.length
-    );
-    if (window.sendUndo) window.sendUndo(op.id);
   }
 
   function redoLocal() {
-    if (redoStack.length === 0) {
-      console.log("REDO: nothing to redo");
-      return;
+    if (window.sendRedo) {
+      window.sendRedo();
+      console.log("[client] Requested global redo");
     }
-    const op = redoStack.pop();
-    operations.push(op);
-    redrawAll(operations);
-    setTimeout(() => redrawAll(operations), 0); // ✅ double-render fix
-    console.log(
-      "REDO → operations:",
-      operations.length,
-      "redoStack:",
-      redoStack.length
-    );
-    if (window.sendRedo) window.sendRedo(op);
   }
 
-  // ==============================
-  // 🌍 Remote Sync
-  // ==============================
+  //sync operations from server
   function applyRemoteOp(op) {
     if (!op || !op.id) return;
     if (appliedOpIds.has(op.id)) return;
@@ -296,9 +272,7 @@
     redrawAll(operations);
   }
 
-  // ==============================
-  // 📤 Expose API
-  // ==============================
+  //api
   window.CanvasModule = {
     setTool,
     setColor,

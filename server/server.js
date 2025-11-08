@@ -5,7 +5,16 @@ const { Server } = require("socket.io");
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: { origin: "*" },
+  pingInterval: 20000, // reduce ping overhead
+  pingTimeout: 40000, // allow longer timeouts
+  transports: ["websocket"], // force pure WebSocket (no fallback)
+  perMessageDeflate: false, //disable compression for speed
+});
+
+let operations = []; // stores all strokes drawn
+let redoStack = []; // stores undone strokes
 
 app.use(express.static(path.join(__dirname, "..", "client")));
 
@@ -14,6 +23,26 @@ let users = {}; // socket.id -> { userId, color, room }
 
 io.on("connection", (socket) => {
   //   console.log("User connected:", socket.id);
+
+  // --- UNDO (GLOBAL) ---
+  socket.on("op:undo", () => {
+    if (operations.length > 0) {
+      const undone = operations.pop();
+      redoStack.push(undone);
+      io.emit("state:update", { operations });
+      console.log("↩️ Global undo triggered");
+    }
+  });
+
+  // --- REDO (GLOBAL) ---
+  socket.on("op:redo", () => {
+    if (redoStack.length > 0) {
+      const redone = redoStack.pop();
+      operations.push(redone);
+      io.emit("state:update", { operations });
+      console.log("↪️ Global redo triggered");
+    }
+  });
 
   //User joins a room
   socket.on("join", ({ userId, color, room = "main" }) => {
@@ -26,7 +55,7 @@ io.on("connection", (socket) => {
       Object.values(users).filter((u) => u.room === room)
     );
 
-    // console.log(`[JOIN] ${userId} joined room: ${room}`);
+    console.log(`[JOIN] ${userId} joined room: ${room}`);
   });
 
   //User drawing status (start/stop drawing)
@@ -49,16 +78,31 @@ io.on("connection", (socket) => {
   });
 
   socket.on("draw:end", (data) => {
-    socket.to(data.room || "main").emit("draw:end", data);
+    if (data.stroke) {
+      operations.push(data.stroke);
+      redoStack = []; // clear redo history on new stroke
+    }
+    socket.broadcast.emit("draw:end", data);
   });
 
-  //Undo/Redo events
-  socket.on("op:undo", ({ userId, opId, room = "main" }) => {
-    io.to(room).emit("op:undo", { userId, opId });
+  // --- UNDO (GLOBAL) ---
+  socket.on("op:undo", () => {
+    if (operations.length > 0) {
+      const undone = operations.pop();
+      redoStack.push(undone);
+      io.emit("state:update", { operations });
+      console.log("↩️ Global undo triggered");
+    }
   });
 
-  socket.on("op:redo", ({ userId, op, room = "main" }) => {
-    io.to(room).emit("op:redo", { userId, op });
+  // --- REDO (GLOBAL) ---
+  socket.on("op:redo", () => {
+    if (redoStack.length > 0) {
+      const redone = redoStack.pop();
+      operations.push(redone);
+      io.emit("state:update", { operations });
+      console.log("↪️ Global redo triggered");
+    }
   });
 
   //Disconnect cleanup
