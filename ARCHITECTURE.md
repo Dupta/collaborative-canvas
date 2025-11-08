@@ -1,8 +1,8 @@
-# 🧱 Collaborative Canvas – Architecture Documentation
+# Collaborative Canvas – Architecture Documentation
 
 ---
 
-## 🧭 Overview
+## Overview
 
 The **Collaborative Canvas** is a real-time, multi-user drawing application built using **Node.js**, **Express**, and **Socket.IO**.  
 It allows multiple users to draw on a shared canvas simultaneously with **live updates**, **cursor tracking**, and **global undo/redo** functionality.
@@ -11,7 +11,7 @@ Each user action — like drawing a line, changing color, or erasing — is broa
 
 ---
 
-## 📊 Data Flow Diagram
+## Data Flow Diagram
 
 User Draws  
 ↓  
@@ -27,7 +27,7 @@ Other clients render stroke live
 
 ---
 
-## ⚙️ WebSocket Protocol
+## WebSocket Protocol
 
 The system uses **Socket.IO** for all real-time communication between the server and clients.
 
@@ -45,7 +45,7 @@ The system uses **Socket.IO** for all real-time communication between the server
 
 ---
 
-## 🧮 Undo/Redo Strategy
+## Undo/Redo Strategy
 
 Each completed stroke is treated as a **unique operation** identified by a generated `op_id`.  
 The client keeps two stacks:
@@ -67,28 +67,28 @@ This ensures all clients stay synchronized and maintain a **shared global canvas
 
 ---
 
-## ⚡ Performance Optimizations
+## Performance Optimizations
 
 To maintain **smooth real-time drawing**, several optimizations were implemented:
 
-- ⚙️ **WebSocket-only Transport**  
+- **WebSocket-only Transport**  
   Configured Socket.IO to use pure WebSockets for lower latency (`transports: ["websocket"]`).
 
-- 🧠 **Incremental Rendering**  
+- **Incremental Rendering**  
   Instead of redrawing the full canvas, only new stroke segments are rendered.
 
-- 🧭 **Cursor Throttling**  
+- **Cursor Throttling**  
   Limits how often cursor position updates are sent (reduces bandwidth).
 
-- 🚫 **Compression Disabled**  
+- **Compression Disabled**  
   Disabling WebSocket compression reduces delay on small, frequent messages.
 
-- 🖥️ **Lightweight DOM Usage**  
+- **Lightweight DOM Usage**  
   Canvas drawing done directly via context — no heavy DOM reflows or layout thrashing.
 
 ---
 
-## ⚔️ Conflict Resolution
+## Conflict Resolution
 
 When multiple users draw simultaneously:
 - Each user’s stroke is treated as an **independent operation**.
@@ -98,7 +98,7 @@ When multiple users draw simultaneously:
 
 ---
 
-## 🧩 Folder Structure
+## Folder Structure
 
 collaborative-canvas/
 ├── client/
@@ -118,7 +118,7 @@ collaborative-canvas/
 
 ---
 
-## 🧠 Component Interaction
+## Component Interaction
 
 
 Client (Browser)
@@ -135,14 +135,14 @@ Server (Node.js)
 
 ---
 
-## 🏁 Summary
+## Summary
 
 The **Collaborative Canvas** demonstrates how **Socket.IO** can be used to create a **real-time, low-latency multi-user experience**.  
 The architecture prioritizes:
-- 🔁 **Synchronized state** (every user sees the same canvas)  
-- ⚡ **Low latency** (via WebSockets and incremental updates)  
-- 🧩 **Simple conflict handling** (first-come message ordering)  
-- 🧠 **Scalability-ready design** (room-based broadcasting possible)
+- **Synchronized state** (every user sees the same canvas)  
+- **Low latency** (via WebSockets and incremental updates)  
+- **Simple conflict handling** (first-come message ordering)  
+- **Scalability-ready design** (room-based broadcasting possible)
 
 This architecture balances simplicity, interactivity, and performance to enable seamless collaborative drawing.
 
